@@ -1,0 +1,10 @@
+{
+  "development": {
+    "username": "root",
+    "password": "root",
+    "database": "push_notification_nodejs",
+    "host": "127.0.0.1",
+    "port": 33601,
+    "dialect": "mysql"
+  }
+}

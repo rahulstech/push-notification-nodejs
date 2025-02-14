@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "push-server": "node --env-file=push-notification-app-server/.env --watch push-notification-app-server/src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,9 +12,11 @@
   "description": "",
   "dependencies": {
     "axios": "^1.7.9",
+    "express": "^4.21.2",
     "firebase-admin": "^13.1.0",
     "mysql2": "^3.12.0",
     "sequelize": "^6.37.5",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "sqlite3": "^5.1.7"
   }
 }
