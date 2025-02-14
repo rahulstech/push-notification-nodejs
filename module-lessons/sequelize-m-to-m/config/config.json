@@ -2,5 +2,9 @@
   "development": {
     "dialect": "sqlite",
     "storage": ":memory:"
+  },
+  "migration-test": {
+    "dialect": "sqlite",
+    "storage": "dbs/migration-test.db3"
   }
 }

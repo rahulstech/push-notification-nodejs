@@ -56,14 +56,18 @@ module.exports = (sequelize) => {
         sequelize,
         timestamps: false,
 
+        // i don't need to set unique index
+        // simply adding primaryKey = true all the columns in composite pk is enough
+        // same rule applies for writing migration script too. see migrations -> create-diagnosis-table
+        // 
         // To create composite primary key
         // 1. set each of the fields primaryKey = true
         // 2. create composite unique index for the columns
         indexes: [
-            {
-                unique: true,
-                fields: ['docid', 'patid']
-            }    
+            // {
+            //     unique: true,
+            //     fields: ['docid', 'patid']
+            // }    
         ]
     })
     return Diagnosis
