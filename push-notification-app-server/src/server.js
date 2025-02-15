@@ -10,16 +10,17 @@ server.patch('/users/:userId/pushToken', async (req, res) => {
     const { userId } = req.params
     const { pushToken } = req.body
     
-    const [count] = await User.update({ pushToken }, {
-        where: { id: userId },
-    })
+    // find user by id
+    const user = await User.findOne({ where: { id: userId }})
 
-    if (count === 1) {
-        res.json({ message: 'push token updated' })
+    if (!user) {
+        return res.status(404).json({ message: 'not found' })
     }
-    else {
-        res.status(400).json({ message: 'push token not updated' })
-    }
+
+    // update the user
+    await user.update({ pushToken })
+
+    res.json({ message: 'push token updated' })
 })
 
 server.post('/users/:userId/messages', async (req, res) => {
@@ -27,7 +28,7 @@ server.post('/users/:userId/messages', async (req, res) => {
     const { message, recipient } = req.body
 
     // add message in db
-    const newMessage = await Message.create(message)
+    const newMessage = await Message.create({ sender: userId, ...message })
 
     // add recipient in db
     const newRecipient = await Recipient.create({ msgId: newMessage.id, userId: recipient })
@@ -43,12 +44,23 @@ server.post('/users/:userId/messages', async (req, res) => {
     
     // send push notification to receipient if destinationToken exists
     if (destinationToken) {
-        const title = `Message from ${recipient}`
-        const body = message.content 
-        await sendPushNotification(destinationToken,  {title, body})
+        const { id, contentType, content, sender } = newMessage
+        await sendPushNotification(destinationToken,  { id: `${id}`, sender, contentType, content })
     }
 
     res.json({ message: "message sent" })
+})
+
+server.get('/users/:userId/logout', async (req, res) => {
+    const { userId } = req.params
+
+    // remove the push token for the userId
+    await User.update({ pushToken: null}, { 
+        where: {
+            id: userId
+    }})
+
+    res.json({ message: "logged out" })
 })
 
 // TODO: firewall setup while using wlan ip and connecting fom other device

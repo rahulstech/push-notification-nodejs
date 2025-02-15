@@ -21,8 +21,10 @@ admin.initializeApp({
     credential: cert
 })
 
+/**
+ * all the field values of msgContent must be string type or null. no other type is accepted
+ */
 async function sendPushNotification(destinationToken, msgContent) {
-    const { title, body } = msgContent
 
     const message = {
         // send a specific client by it token. this is the same token client receives from FCM server
@@ -43,9 +45,10 @@ async function sendPushNotification(destinationToken, msgContent) {
         // }
 
         // data is handled inside onMessageReceived(RemoteMessage) of FirebaseMessagingService of android sdk
-        data: {
-            title, body
-        }
+        // it's better to push data to client to notify that something has changed rather than what actually changed
+        // when client receives client send a new request to fetch the actual chages. thus the push notification will be lightweight
+        // and there will be no or less chance being dropped. 
+        data: msgContent
     }
 
     console.log('message ', message)

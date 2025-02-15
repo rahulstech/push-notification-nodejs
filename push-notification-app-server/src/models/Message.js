@@ -1,6 +1,12 @@
 const { DataTypes, Model } = require('sequelize')
 
-class Message extends Model {}
+class Message extends Model {
+
+    static associate({ User }) {
+        User.hasMany(Message, { foreignKey: 'sender' })
+        Message.belongsTo(User, { foreignKey: 'sender' })
+    }
+}
 
 module.exports = ( sequelize ) => {
 
@@ -12,6 +18,10 @@ module.exports = ( sequelize ) => {
         content: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        sender: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         }
     }, {
         sequelize,
