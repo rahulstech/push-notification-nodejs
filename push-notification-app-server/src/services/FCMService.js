@@ -8,7 +8,7 @@ const path = require('node:path')
 // 4. goto the "Service Account" tab and select the "Firebase Admin SDK"
 // 5. scroll below and click "Generate Private Key" button and click again the "Generate Key" button in dialog
 // 6. download the josn file and save it securely
-const serviceAccount = require(path.resolve(__dirname,'..','..','fcm-key.json'))
+const serviceAccount = require(path.resolve(__dirname,'..','..','fcm-key.json'));
 
 const projectId = serviceAccount.project_id
 
@@ -18,7 +18,7 @@ const cert = admin.credential.cert(serviceAccount)
 
 admin.initializeApp({
     credential: cert
-})
+});
 
 /**
  * all the field values of msgContent must be string type or null. no other type is accepted
@@ -59,6 +59,28 @@ async function sendPushNotification(destinationToken, msgContent) {
     console.log('response from fcm server ', response)
 }
 
+async function subscribeToTopic(userPushTokens, topicName) {
+    const response = await admin.messaging().subscribeToTopic(userPushTokens, topicName);
+
+    console.log(`response from fcm server `, response);
+}
+
+async function unsubscribeFromTopic(userPushTokens, topicName) {
+    const response = await admin.messaging().unsubscribeFromTopic(userPushTokens, topicName);
+
+    console.log(`response from fcm server `, response);
+}
+
+async function sendMessageInTopic(topicName, msgContent) {
+    const message = {
+        topic: topicName,
+        data: msgContent,
+    };
+    const response = await admin.messaging().send(message);
+
+    console.log(`response from fcm server `, response);
+}
+
 module.exports = { 
-    sendPushNotification,
+    sendPushNotification, subscribeToTopic, unsubscribeFromTopic, sendMessageInTopic, 
 }
