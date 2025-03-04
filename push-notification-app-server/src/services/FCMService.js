@@ -1,4 +1,3 @@
-const axios = require('axios');
 const admin = require('firebase-admin')
 const path = require('node:path')
 
